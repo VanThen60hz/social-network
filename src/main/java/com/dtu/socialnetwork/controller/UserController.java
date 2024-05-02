@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 public class UserController {
@@ -14,19 +15,22 @@ public class UserController {
     UserRepository userRepository;
 
 
-//    @GetMapping("/users")
-//    public List<User> getUsers() {
-//
-//        return users;
-//    }
-//
-//    @GetMapping("/users/{userId}")
-//    public User getUserById(@PathVariable("userId") Integer id) {
-//        return users.stream()
-//                .filter(user -> user.getId().equals(id))
-//                .findFirst()
-//                .orElse(null);
-//    }
+    @GetMapping("/users")
+    public List<User> getUsers() {
+        return userRepository.findAll();
+    }
+
+    @GetMapping("/users/{userId}")
+    public User getUserById(@PathVariable("userId") Integer id) throws Exception {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isPresent()) {
+            return user.get();
+        }
+
+        throw new Exception("User not exist with id = " + id);
+
+    }
 
     @PostMapping("/users")
     public User CreateUser(@RequestBody User user) {
@@ -40,34 +44,48 @@ public class UserController {
         return userRepository.save(newUser);
     }
 
-//    @PatchMapping("/users/{userId}")
-//    public User updateUser(@PathVariable("userId") Integer id, @RequestBody User user) {
-//        User userUpdate = users.stream()
-//                .filter(u -> u.getId().equals(id))
-//                .findFirst()
-//                .orElse(null);
-//        if (userUpdate != null) {
-//            userUpdate.setFirstName(user.getFirstName());
-//            userUpdate.setLastName(user.getLastName());
-//            userUpdate.setEmail(user.getEmail());
-//            userUpdate.setPassword(user.getPassword());
-//        }
-//
-//
-//        return userUpdate;
-//    }
+    @PatchMapping("/users/{userId}")
+    public User updateUser(@PathVariable("userId") Integer id, @RequestBody User user) throws Exception {
+
+        Optional<User> userFind = userRepository.findById(id);
+
+        if (userFind.isEmpty()) {
+            throw new Exception("User not exist with id = " + id);
+        }
+
+        User oldUser = userFind.get();
+
+        if (user.getFirstName() != null) {
+            oldUser.setFirstName(user.getFirstName());
+        }
+
+        if (user.getLastName() != null) {
+            oldUser.setLastName(user.getLastName());
+        }
+
+        if (user.getEmail() != null) {
+            oldUser.setEmail(user.getEmail());
+        }
+
+        if (user.getPassword() != null) {
+            oldUser.setPassword(user.getPassword());
+        }
+
+        return userRepository.save(oldUser);
+
+    }
 
 
-//    @DeleteMapping("/users/{userId}")
-//    public String deleteUser(@PathVariable("userId") Integer id) {
-//        User userDelete = users.stream()
-//                .filter(u -> u.getId().equals(id))
-//                .findFirst()
-//                .orElse(null);
-//        if (userDelete != null) {
-//            users.remove(userDelete);
-//            return "Delete success!";
-//        }
-//        return "Can't find user to delete!";
-//    }
+    @DeleteMapping("/users/{userId}")
+    public String deleteUser(@PathVariable("userId") Integer id) throws Exception {
+        Optional<User> user = userRepository.findById(id);
+
+        if (user.isEmpty()) {
+            throw new Exception("User not exist with id = " + id);
+        }
+
+        userRepository.deleteById(id);
+
+        return "User delete successfully with id = " + id;
+    }
 }
