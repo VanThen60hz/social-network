@@ -2,6 +2,7 @@ package com.dtu.socialnetwork.controller;
 
 import com.dtu.socialnetwork.models.User;
 import com.dtu.socialnetwork.repository.UserRepository;
+import com.dtu.socialnetwork.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,8 @@ public class UserController {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserService userService;
 
     @GetMapping("/users")
     public List<User> getUsers() {
@@ -22,57 +25,17 @@ public class UserController {
 
     @GetMapping("/users/{userId}")
     public User getUserById(@PathVariable("userId") Integer id) throws Exception {
-        Optional<User> user = userRepository.findById(id);
-
-        if (user.isPresent()) {
-            return user.get();
-        }
-
-        throw new Exception("User not exist with id = " + id);
-
+        return userService.findUserById(id);
     }
 
     @PostMapping("/users")
     public User CreateUser(@RequestBody User user) {
-        User newUser = new User();
-
-        newUser.setFirstName(user.getFirstName());
-        newUser.setLastName(user.getLastName());
-        newUser.setEmail(user.getEmail());
-        newUser.setPassword(user.getPassword());
-
-        return userRepository.save(newUser);
+        return userService.registerUser(user);
     }
 
     @PatchMapping("/users/{userId}")
     public User updateUser(@PathVariable("userId") Integer id, @RequestBody User user) throws Exception {
-
-        Optional<User> userFind = userRepository.findById(id);
-
-        if (userFind.isEmpty()) {
-            throw new Exception("User not exist with id = " + id);
-        }
-
-        User oldUser = userFind.get();
-
-        if (user.getFirstName() != null) {
-            oldUser.setFirstName(user.getFirstName());
-        }
-
-        if (user.getLastName() != null) {
-            oldUser.setLastName(user.getLastName());
-        }
-
-        if (user.getEmail() != null) {
-            oldUser.setEmail(user.getEmail());
-        }
-
-        if (user.getPassword() != null) {
-            oldUser.setPassword(user.getPassword());
-        }
-
-        return userRepository.save(oldUser);
-
+        return userService.updateUser(user, id);
     }
 
 
@@ -87,5 +50,15 @@ public class UserController {
         userRepository.deleteById(id);
 
         return "User delete successfully with id = " + id;
+    }
+
+    @PutMapping("/users/{userId1}/follow/{userId2}")
+    public User followUser(@PathVariable("userId1") Integer userId1, @PathVariable("userId2") Integer userId2) throws Exception {
+        return userService.followUser(userId1, userId2);
+    }
+
+    @GetMapping("/users/search")
+    public List<User> searchUser(@RequestParam("query") String query) {
+        return userService.searchUser(query);
     }
 }
