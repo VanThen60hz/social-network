@@ -3,10 +3,13 @@ package com.dtu.socialnetwork.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Builder;
 
 @Entity
 @Table(name = "users")
+@Builder
 public class User {
 
     @Id
@@ -47,11 +50,15 @@ public class User {
     @Column(name = "following_id")
     private List<Integer> followings = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Post> posts = new ArrayList<>();
+
     public User() {
         // Default constructor required by JPA
     }
 
-    public User(Integer id, String firstName, String lastName, String email, String password, String gender, List<Integer> followers, List<Integer> followings) {
+    public User(Integer id, String firstName, String lastName, String email, String password, String gender, List<Integer> followers, List<Integer> followings, List<Post> posts) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -60,6 +67,7 @@ public class User {
         this.gender = gender;
         this.followers = followers;
         this.followings = followings;
+        this.posts = posts;
     }
 
     public Integer getId() {
@@ -124,5 +132,13 @@ public class User {
 
     public void setFollowings(List<Integer> followings) {
         this.followings = followings;
+    }
+
+    public List<Post> getPosts() {
+        return posts;
+    }
+
+    public void setPosts(List<Post> posts) {
+        this.posts = posts;
     }
 }
