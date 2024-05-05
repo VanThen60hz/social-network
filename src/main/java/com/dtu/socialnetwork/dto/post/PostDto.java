@@ -1,5 +1,7 @@
 package com.dtu.socialnetwork.dto.post;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,6 +15,8 @@ public class PostDto implements Serializable {
     private final String caption;
     private final String image;
     private final String video;
+
+    @JsonIgnore
     private final UserOfPostDto user;
     private final LocalDateTime createdAt;
     private final List<UserOfPostDto> likedByUsers;
