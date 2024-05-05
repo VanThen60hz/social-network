@@ -5,11 +5,9 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Builder;
 
 @Entity
 @Table(name = "users")
-@Builder
 public class User {
 
     @Id

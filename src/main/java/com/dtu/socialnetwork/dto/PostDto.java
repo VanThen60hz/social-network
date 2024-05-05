@@ -1,8 +1,5 @@
 package com.dtu.socialnetwork.dto;
 
-import lombok.Data;
-import lombok.Setter;
-
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,18 +13,18 @@ public class PostDto implements Serializable {
     private final String caption;
     private final String image;
     private final String video;
-    private final Integer userId;
+    private final UserDto user;
     private final LocalDateTime createdAt;
-    private final List<Integer> likedByUserIds;
+    private final List<UserDto> likedByUsers;
 
-    public PostDto(Integer id, String caption, String image, String video, Integer userId, LocalDateTime createdAt, List<Integer> likedByUserIds) {
+    public PostDto(Integer id, String caption, String image, String video, UserDto user, LocalDateTime createdAt, List<UserDto> likedByUsers) {
         this.id = id;
         this.caption = caption;
         this.image = image;
         this.video = video;
-        this.userId = userId;
+        this.user = user;
         this.createdAt = createdAt;
-        this.likedByUserIds = likedByUserIds;
+        this.likedByUsers = likedByUsers;
     }
 
     public Integer getId() {
@@ -46,16 +43,16 @@ public class PostDto implements Serializable {
         return video;
     }
 
-    public Integer getUserId() {
-        return userId;
+    public UserDto getUser() {
+        return user;
     }
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public List<Integer> getLikedByUserIds() {
-        return likedByUserIds;
+    public List<UserDto> getLikedByUsers() {
+        return likedByUsers;
     }
 
     @Override
@@ -67,14 +64,14 @@ public class PostDto implements Serializable {
                 Objects.equals(this.caption, entity.caption) &&
                 Objects.equals(this.image, entity.image) &&
                 Objects.equals(this.video, entity.video) &&
-                Objects.equals(this.userId, entity.userId) &&
+                Objects.equals(this.user, entity.user) &&
                 Objects.equals(this.createdAt, entity.createdAt) &&
-                Objects.equals(this.likedByUserIds, entity.likedByUserIds);
+                Objects.equals(this.likedByUsers, entity.likedByUsers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, caption, image, video, userId, createdAt, likedByUserIds);
+        return Objects.hash(id, caption, image, video, user, createdAt, likedByUsers);
     }
 
     @Override
@@ -84,8 +81,8 @@ public class PostDto implements Serializable {
                 "caption = " + caption + ", " +
                 "image = " + image + ", " +
                 "video = " + video + ", " +
-                "userId = " + userId + ", " +
+                "user = " + user + ", " +
                 "createdAt = " + createdAt + ", " +
-                "likedByUserIds = " + likedByUserIds + ")";
+                "likedByUsers = " + likedByUsers + ")";
     }
 }

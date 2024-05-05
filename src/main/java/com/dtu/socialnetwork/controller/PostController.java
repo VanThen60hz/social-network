@@ -1,5 +1,6 @@
 package com.dtu.socialnetwork.controller;
 
+import com.dtu.socialnetwork.dto.CreatePostDto;
 import com.dtu.socialnetwork.dto.PostDto;
 import com.dtu.socialnetwork.models.Post;
 import com.dtu.socialnetwork.response.ApiResponse;
@@ -18,8 +19,8 @@ public class PostController {
     PostService postService;
 
     @PostMapping("/posts/user/{userId}")
-    public ResponseEntity<Post> createNewPost(@RequestBody Post post, @PathVariable Integer userId) throws Exception {
-        Post newPost = postService.createNewPost(post, userId);
+    public ResponseEntity<Post> createNewPost(@RequestBody CreatePostDto createPostDto, @PathVariable Integer userId) throws Exception {
+        Post newPost = postService.createNewPost(createPostDto, userId);
         return new ResponseEntity<>(newPost, HttpStatus.CREATED);
     }
 
@@ -53,6 +54,7 @@ public class PostController {
     @PatchMapping("/posts/{postId}/user/{userId}")
     public ResponseEntity<Post> savePost(@PathVariable Integer postId, @PathVariable Integer userId) throws Exception {
         Post post = postService.savePost(postId, userId);
+        System.out.println(post);
         return new ResponseEntity<>(post, HttpStatus.OK);
     }
 

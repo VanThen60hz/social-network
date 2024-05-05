@@ -1,67 +1,57 @@
 package com.dtu.socialnetwork.service.impl;
 
+import com.dtu.socialnetwork.dto.CreatePostDto;
 import com.dtu.socialnetwork.dto.PostDto;
+import com.dtu.socialnetwork.mapper.CreatePostMapper;
+import com.dtu.socialnetwork.mapper.PostMapper;
 import com.dtu.socialnetwork.models.Post;
 import com.dtu.socialnetwork.models.User;
 import com.dtu.socialnetwork.repository.PostRepository;
 import com.dtu.socialnetwork.repository.UserRepository;
 import com.dtu.socialnetwork.service.IPostService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PostService implements IPostService {
-    @Autowired
-    PostRepository postRepository;
+    private final PostRepository postRepository;
+    private final UserRepository userRepository;
+    private final UserService userService;
+    private final PostMapper postMapper;
+    private final CreatePostMapper createPostMapper;
 
-    @Autowired
-    UserService userService;
-
-    @Autowired
-    UserRepository userRepository;
+    public PostService(PostRepository postRepository, UserRepository userRepository, UserService userService, PostMapper postMapper,
+                       CreatePostMapper createPostMapper) {
+        this.postRepository = postRepository;
+        this.userRepository = userRepository;
+        this.userService = userService;
+        this.postMapper = postMapper;
+        this.createPostMapper = createPostMapper;
+    }
 
 
     @Override
-    public Post createNewPost(Post post, Integer userId) throws Exception {
-        User user = userService.findUserById(userId);
+    public Post createNewPost(CreatePostDto createPostDto, Integer userId) throws Exception {
+        Post post = createPostMapper.toEntity(createPostDto);
 
-        Post newPost = new Post();
-        newPost.setCaption(post.getCaption());
-        newPost.setImage(post.getImage());
-        newPost.setCreatedAt(LocalDateTime.now());
-        newPost.setVideo(post.getVideo());
-        newPost.setUser(user);
-        return postRepository.save(newPost);
+        User user = userService.findUserById(userId);
+        post.setUser(user);
+        post.setCreatedAt(LocalDateTime.now());
+
+        return postRepository.save(post);
     }
 
     @Override
     public List<PostDto> findAllPost() {
         List<Post> posts = postRepository.findAll();
-
-        List<PostDto> postDtos = new ArrayList<>();
-        for (Post post : posts) {
-            PostDto postDto = new PostDto(
-                    post.getId(),
-                    post.getCaption(),
-                    post.getImage(),
-                    post.getVideo(),
-                    post.getUser().getId(),
-                    post.getCreatedAt(),
-                    post.getLikedByUsers()
-                            .stream()
-                            .map(User::getId)
-                            .toList()
-            );
-            postDtos.add(postDto);
-        }
-
-        return postDtos;
+        return posts.stream()
+                .map(postMapper::toDto)
+                .collect(Collectors.toList());
     }
 
 
