@@ -1,4 +1,4 @@
-package com.dtu.socialnetwork.dto;
+package com.dtu.socialnetwork.dto.post;
 
 import java.io.Serializable;
 import java.util.List;
@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * DTO for {@link com.dtu.socialnetwork.models.User}
  */
-public class UserDto implements Serializable {
+public class UserOfPostDto implements Serializable {
     private final Integer id;
     private final String firstName;
     private final String lastName;
@@ -17,7 +17,7 @@ public class UserDto implements Serializable {
     private final List<Integer> followers;
     private final List<Integer> followings;
 
-    public UserDto(Integer id, String firstName, String lastName, String email, String password, String gender, List<Integer> followers, List<Integer> followings) {
+    public UserOfPostDto(Integer id, String firstName, String lastName, String email, String password, String gender, List<Integer> followers, List<Integer> followings) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -64,7 +64,7 @@ public class UserDto implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserDto entity = (UserDto) o;
+        UserOfPostDto entity = (UserOfPostDto) o;
         return Objects.equals(this.id, entity.id) &&
                 Objects.equals(this.firstName, entity.firstName) &&
                 Objects.equals(this.lastName, entity.lastName) &&

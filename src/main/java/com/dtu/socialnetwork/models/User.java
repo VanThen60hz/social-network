@@ -1,7 +1,9 @@
 package com.dtu.socialnetwork.models;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -48,9 +50,19 @@ public class User {
     @Column(name = "following_id")
     private List<Integer> followings = new ArrayList<>();
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-    @JsonIgnore
-    private List<Post> posts = new ArrayList<>();
+    @ManyToMany
+    @JoinTable(name = "users_posts",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "posts_id"))
+    private Set<Post> savePosts = new LinkedHashSet<>();
+
+    public Set<Post> getSavePosts() {
+        return savePosts;
+    }
+
+    public void setSavePosts(Set<Post> savePosts) {
+        this.savePosts = savePosts;
+    }
 
     public User() {
         // Default constructor required by JPA
@@ -65,7 +77,6 @@ public class User {
         this.gender = gender;
         this.followers = followers;
         this.followings = followings;
-        this.posts = posts;
     }
 
     public Integer getId() {
@@ -132,11 +143,4 @@ public class User {
         this.followings = followings;
     }
 
-    public List<Post> getPosts() {
-        return posts;
-    }
-
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-    }
 }

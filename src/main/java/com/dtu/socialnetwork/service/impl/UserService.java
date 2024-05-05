@@ -1,5 +1,7 @@
 package com.dtu.socialnetwork.service.impl;
 
+import com.dtu.socialnetwork.dto.user.UserDto;
+import com.dtu.socialnetwork.mapper.UserMapper;
 import com.dtu.socialnetwork.models.User;
 import com.dtu.socialnetwork.repository.UserRepository;
 import com.dtu.socialnetwork.service.IUserService;
@@ -8,14 +10,23 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements IUserService {
     @Autowired
     UserRepository userRepository;
 
+    @Autowired
+    UserMapper userMapper;
+
     @Override
-    public User registerUser(User user) {
+    public List<UserDto> findAllUser() {
+        return userRepository.findAll().stream().map(userMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public UserDto registerUser(User user) {
         User newUser = new User();
 
         newUser.setFirstName(user.getFirstName());
@@ -23,30 +34,30 @@ public class UserService implements IUserService {
         newUser.setEmail(user.getEmail());
         newUser.setPassword(user.getPassword());
 
-        return userRepository.save(newUser);
+        return userMapper.toDto(userRepository.save(newUser));
     }
 
     @Override
-    public User findUserById(Integer userId) throws Exception {
+    public UserDto findUserById(Integer userId) throws Exception {
         Optional<User> user = userRepository.findById(userId);
 
         if (user.isPresent()) {
-            return user.get();
+            return userMapper.toDto(user.get());
         }
 
         throw new Exception("User not exist with id = " + userId);
     }
 
     @Override
-    public User findUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public UserDto findUserByEmail(String email) {
+        return userMapper.toDto(userRepository.findByEmail(email));
     }
 
     @Override
-    public User followUser(Integer userId1, Integer userId2) throws Exception {
+    public UserDto followUser(Integer userId1, Integer userId2) throws Exception {
 
-        User user1 = findUserById(userId1);
-        User user2 = findUserById(userId2);
+        User user1 = userRepository.findById(userId1).orElse(null);
+        User user2 = userRepository.findById(userId2).orElse(null);
 
         if (user1 == null || user2 == null) {
             throw new Exception("User not exist with id = " + userId1 + " or " + userId2);
@@ -58,11 +69,11 @@ public class UserService implements IUserService {
         userRepository.save(user1);
         userRepository.save(user2);
 
-        return user1;
+        return userMapper.toDto(user1);
     }
 
     @Override
-    public User updateUser(User user, Integer userId) throws Exception {
+    public UserDto updateUser(User user, Integer userId) throws Exception {
         Optional<User> userFind = userRepository.findById(userId);
 
         if (userFind.isEmpty()) {
@@ -87,11 +98,11 @@ public class UserService implements IUserService {
             oldUser.setPassword(user.getPassword());
         }
 
-        return userRepository.save(oldUser);
+        return userMapper.toDto(userRepository.save(oldUser));
     }
 
     @Override
-    public List<User> searchUser(String query) {
-        return userRepository.searchUser(query);
+    public List<UserDto> searchUser(String query) {
+        return userRepository.searchUser(query).stream().map(userMapper::toDto).collect(Collectors.toList());
     }
 }

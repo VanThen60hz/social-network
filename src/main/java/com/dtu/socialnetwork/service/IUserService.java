@@ -1,19 +1,22 @@
 package com.dtu.socialnetwork.service;
 
+import com.dtu.socialnetwork.dto.user.UserDto;
 import com.dtu.socialnetwork.models.User;
 
 import java.util.List;
 
 public interface IUserService {
-    public User registerUser(User user);
+    List<UserDto> findAllUser();
 
-    public User findUserById(Integer userId) throws Exception;
+    UserDto registerUser(User user);
 
-    public User findUserByEmail(String email);
+    UserDto findUserById(Integer userId) throws Exception;
 
-    public User followUser(Integer userId1, Integer userId2) throws Exception;
+    UserDto findUserByEmail(String email);
 
-    public User updateUser(User user, Integer userId) throws Exception;
+    UserDto followUser(Integer userId1, Integer userId2) throws Exception;
 
-    public List<User> searchUser(String query);
+    UserDto updateUser(User user, Integer userId) throws Exception;
+
+    List<UserDto> searchUser(String query);
 }

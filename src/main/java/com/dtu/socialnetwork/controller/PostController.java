@@ -1,8 +1,7 @@
 package com.dtu.socialnetwork.controller;
 
-import com.dtu.socialnetwork.dto.CreatePostDto;
-import com.dtu.socialnetwork.dto.PostDto;
-import com.dtu.socialnetwork.models.Post;
+import com.dtu.socialnetwork.dto.post.CreatePostDto;
+import com.dtu.socialnetwork.dto.post.PostDto;
 import com.dtu.socialnetwork.response.ApiResponse;
 import com.dtu.socialnetwork.service.impl.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +18,8 @@ public class PostController {
     PostService postService;
 
     @PostMapping("/posts/user/{userId}")
-    public ResponseEntity<Post> createNewPost(@RequestBody CreatePostDto createPostDto, @PathVariable Integer userId) throws Exception {
-        Post newPost = postService.createNewPost(createPostDto, userId);
+    public ResponseEntity<PostDto> createNewPost(@RequestBody CreatePostDto createPostDto, @PathVariable Integer userId) throws Exception {
+        PostDto newPost = postService.createNewPost(createPostDto, userId);
         return new ResponseEntity<>(newPost, HttpStatus.CREATED);
     }
 
@@ -34,15 +33,15 @@ public class PostController {
     }
 
     @GetMapping("/posts/{postId}")
-    public ResponseEntity<Post> findPostById(@PathVariable Integer postId) throws Exception {
-        Post post = postService.findPostById(postId);
-        return new ResponseEntity<>(post, HttpStatus.OK);
+    public ResponseEntity<PostDto> findPostById(@PathVariable Integer postId) throws Exception {
+        PostDto postDto = postService.findPostById(postId);
+        return new ResponseEntity<>(postDto, HttpStatus.OK);
     }
 
     @GetMapping("/posts/user/{userId}")
-    public ResponseEntity<List<Post>> findUserPosts(@PathVariable Integer userId) {
-        List<Post> posts = postService.findPostByUserId(userId);
-        return new ResponseEntity<>(posts, HttpStatus.OK);
+    public ResponseEntity<List<PostDto>> findUserPosts(@PathVariable Integer userId) {
+        List<PostDto> postDtos = postService.findPostByUserId(userId);
+        return new ResponseEntity<>(postDtos, HttpStatus.OK);
     }
 
     @GetMapping("/posts")
@@ -52,15 +51,14 @@ public class PostController {
     }
 
     @PatchMapping("/posts/{postId}/user/{userId}")
-    public ResponseEntity<Post> savePost(@PathVariable Integer postId, @PathVariable Integer userId) throws Exception {
-        Post post = postService.savePost(postId, userId);
-        System.out.println(post);
-        return new ResponseEntity<>(post, HttpStatus.OK);
+    public ResponseEntity<PostDto> savePost(@PathVariable Integer postId, @PathVariable Integer userId) throws Exception {
+        PostDto postDto = postService.savePost(postId, userId);
+        return new ResponseEntity<>(postDto, HttpStatus.OK);
     }
 
-    @PatchMapping("/posts/{postId}/like/user/{userId}")
-    public ResponseEntity<Post> likePost(@PathVariable Integer postId, @PathVariable Integer userId) throws Exception {
-        Post post = postService.likePost(postId, userId);
-        return new ResponseEntity<>(post, HttpStatus.OK);
+    @PostMapping("/posts/like/{postId}/user/{userId}")
+    public ResponseEntity<PostDto> likePost(@PathVariable Integer postId, @PathVariable Integer userId) throws Exception {
+        PostDto postDto = postService.likePost(postId, userId);
+        return new ResponseEntity<>(postDto, HttpStatus.OK);
     }
 }

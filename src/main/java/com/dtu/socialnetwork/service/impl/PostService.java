@@ -1,7 +1,7 @@
 package com.dtu.socialnetwork.service.impl;
 
-import com.dtu.socialnetwork.dto.CreatePostDto;
-import com.dtu.socialnetwork.dto.PostDto;
+import com.dtu.socialnetwork.dto.post.CreatePostDto;
+import com.dtu.socialnetwork.dto.post.PostDto;
 import com.dtu.socialnetwork.mapper.CreatePostMapper;
 import com.dtu.socialnetwork.mapper.PostMapper;
 import com.dtu.socialnetwork.models.Post;
@@ -36,14 +36,14 @@ public class PostService implements IPostService {
 
 
     @Override
-    public Post createNewPost(CreatePostDto createPostDto, Integer userId) throws Exception {
+    public PostDto createNewPost(CreatePostDto createPostDto, Integer userId) throws Exception {
         Post post = createPostMapper.toEntity(createPostDto);
 
-        User user = userService.findUserById(userId);
-        post.setUser(user);
+        Optional<User> user = userRepository.findById(userId);
+        post.setUser(user.get());
         post.setCreatedAt(LocalDateTime.now());
 
-        return postRepository.save(post);
+        return postMapper.toDto(postRepository.save(post));
     }
 
     @Override
@@ -56,42 +56,55 @@ public class PostService implements IPostService {
 
 
     @Override
-    public Post findPostById(Integer postId) throws Exception {
+    public PostDto findPostById(Integer postId) throws Exception {
         Optional<Post> post = postRepository.findById(postId);
         if (post.isEmpty()) {
             throw new Exception("Post not exist with id = " + postId);
         }
 
-        return post.get();
+        return postMapper.toDto(post.get());
     }
 
     @Override
-    public List<Post> findPostByUserId(Integer userId) {
-        return postRepository.findPostByUserId(userId);
+    public List<PostDto> findPostByUserId(Integer userId) {
+        return postRepository.findPostByUserId(userId).stream()
+                .map(postMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Post savePost(Integer postId, Integer userId) throws Exception {
-        Post post = findPostById(postId);
-        User user = userService.findUserById(userId);
+    public PostDto savePost(Integer postId, Integer userId) throws Exception {
+        Optional<Post> post = postRepository.findById(postId);
+        if (post.isEmpty()) {
+            throw new Exception("Post not exist with id = " + postId);
+        }
 
-        if (user.getPosts().contains(post)) {
-            user.getPosts().remove(post);
+        Post savePost = post.get();
+        User user = userRepository.findById(userId).get();
+
+        if (user.getSavePosts().contains(savePost)) {
+            user.getSavePosts().remove(savePost);
         } else {
-            user.getPosts().add(post);
+            user.getSavePosts().add(savePost);
         }
 
         userRepository.save(user);
 
-        return post;
+        return postMapper.toDto(savePost);
     }
 
     @Override
     public String deletePost(Integer postId, Integer userId) throws Exception {
-        Post post = findPostById(postId);
-        User user = userService.findUserById(userId);
+        Optional<Post> post = postRepository.findById(postId);
+        if (post.isEmpty()) {
+            throw new Exception("Post not exist with id = " + postId);
+        }
 
-        if (!Objects.equals(post.getUser().getId(), user.getId())) {
+        Post delPost = post.get();
+
+        User user = userRepository.findById(userId).get();
+
+        if (!Objects.equals(delPost.getUser().getId(), user.getId())) {
             throw new Exception("You can't delete another user's post");
         }
 
@@ -100,17 +113,22 @@ public class PostService implements IPostService {
     }
 
     @Override
-    public Post likePost(Integer postId, Integer userId) throws Exception {
-        Post post = findPostById(postId);
-        User user = userService.findUserById(userId);
-
-        if (post.getLikedByUsers().contains(user)) {
-            post.getLikedByUsers().remove(user);
-        } else {
-            post.getLikedByUsers().add(user);
+    public PostDto likePost(Integer postId, Integer userId) throws Exception {
+        Optional<Post> post = postRepository.findById(postId);
+        if (post.isEmpty()) {
+            throw new Exception("Post not exist with id = " + postId);
         }
 
-        return postRepository.save(post);
+        Post likePost = post.get();
+        User user = userRepository.findById(userId).get();
+
+        if (likePost.getLikedByUsers().contains(user)) {
+            likePost.getLikedByUsers().remove(user);
+        } else {
+            likePost.getLikedByUsers().add(user);
+        }
+
+        return postMapper.toDto(postRepository.save(likePost));
     }
 
 }

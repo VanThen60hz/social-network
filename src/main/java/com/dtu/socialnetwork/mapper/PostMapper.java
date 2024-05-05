@@ -1,6 +1,6 @@
 package com.dtu.socialnetwork.mapper;
 
-import com.dtu.socialnetwork.dto.PostDto;
+import com.dtu.socialnetwork.dto.post.PostDto;
 import com.dtu.socialnetwork.models.Post;
 import org.mapstruct.*;
 
@@ -12,4 +12,5 @@ public interface PostMapper {
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     Post partialUpdate(PostDto postDto, @MappingTarget Post post);
+    
 }

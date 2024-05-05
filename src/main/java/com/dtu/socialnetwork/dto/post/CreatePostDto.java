@@ -1,4 +1,4 @@
-package com.dtu.socialnetwork.dto;
+package com.dtu.socialnetwork.dto.post;
 
 import java.io.Serializable;
 import java.util.Objects;

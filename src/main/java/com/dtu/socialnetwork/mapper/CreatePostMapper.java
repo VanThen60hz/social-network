@@ -1,6 +1,6 @@
 package com.dtu.socialnetwork.mapper;
 
-import com.dtu.socialnetwork.dto.CreatePostDto;
+import com.dtu.socialnetwork.dto.post.CreatePostDto;
 import com.dtu.socialnetwork.models.Post;
 import org.mapstruct.*;
 

@@ -1,4 +1,4 @@
-package com.dtu.socialnetwork.dto;
+package com.dtu.socialnetwork.dto.post;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,11 +13,11 @@ public class PostDto implements Serializable {
     private final String caption;
     private final String image;
     private final String video;
-    private final UserDto user;
+    private final UserOfPostDto user;
     private final LocalDateTime createdAt;
-    private final List<UserDto> likedByUsers;
+    private final List<UserOfPostDto> likedByUsers;
 
-    public PostDto(Integer id, String caption, String image, String video, UserDto user, LocalDateTime createdAt, List<UserDto> likedByUsers) {
+    public PostDto(Integer id, String caption, String image, String video, UserOfPostDto user, LocalDateTime createdAt, List<UserOfPostDto> likedByUsers) {
         this.id = id;
         this.caption = caption;
         this.image = image;
@@ -43,7 +43,7 @@ public class PostDto implements Serializable {
         return video;
     }
 
-    public UserDto getUser() {
+    public UserOfPostDto getUser() {
         return user;
     }
 
@@ -51,7 +51,7 @@ public class PostDto implements Serializable {
         return createdAt;
     }
 
-    public List<UserDto> getLikedByUsers() {
+    public List<UserOfPostDto> getLikedByUsers() {
         return likedByUsers;
     }
 
