@@ -51,7 +51,7 @@ public class User {
     private List<Integer> followings = new ArrayList<>();
 
     @ManyToMany
-    @JoinTable(name = "users_posts",
+    @JoinTable(name = "save_posts",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "posts_id"))
     private Set<Post> savePosts = new LinkedHashSet<>();
