@@ -12,18 +12,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/posts")
 public class PostController {
 
     @Autowired
     PostService postService;
 
-    @PostMapping("/posts/user/{userId}")
+    @PostMapping("user/{userId}")
     public ResponseEntity<PostDto> createNewPost(@RequestBody CreatePostDto createPostDto, @PathVariable Integer userId) throws Exception {
         PostDto newPost = postService.createNewPost(createPostDto, userId);
         return new ResponseEntity<>(newPost, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/posts/{postId}/user/{userId}")
+    @DeleteMapping("{postId}/user/{userId}")
     public ResponseEntity<ApiResponse> deletePost(@PathVariable Integer postId, @PathVariable Integer userId) throws Exception {
         String message = postService.deletePost(postId, userId);
 
@@ -32,31 +33,31 @@ public class PostController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/posts/{postId}")
+    @GetMapping("{postId}")
     public ResponseEntity<PostDto> findPostById(@PathVariable Integer postId) throws Exception {
         PostDto postDto = postService.findPostById(postId);
         return new ResponseEntity<>(postDto, HttpStatus.OK);
     }
 
-    @GetMapping("/posts/user/{userId}")
+    @GetMapping("user/{userId}")
     public ResponseEntity<List<PostDto>> findUserPosts(@PathVariable Integer userId) {
         List<PostDto> postDtos = postService.findPostByUserId(userId);
         return new ResponseEntity<>(postDtos, HttpStatus.OK);
     }
 
-    @GetMapping("/posts")
+    @GetMapping()
     public ResponseEntity<List<PostDto>> findAllPosts() {
         List<PostDto> posts = postService.findAllPost();
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-    @PatchMapping("/posts/{postId}/user/{userId}")
+    @PatchMapping("{postId}/user/{userId}")
     public ResponseEntity<PostDto> savePost(@PathVariable Integer postId, @PathVariable Integer userId) throws Exception {
         PostDto postDto = postService.savePost(postId, userId);
         return new ResponseEntity<>(postDto, HttpStatus.OK);
     }
 
-    @PostMapping("/posts/like/{postId}/user/{userId}")
+    @PostMapping("like/{postId}/user/{userId}")
     public ResponseEntity<PostDto> likePost(@PathVariable Integer postId, @PathVariable Integer userId) throws Exception {
         PostDto postDto = postService.likePost(postId, userId);
         return new ResponseEntity<>(postDto, HttpStatus.OK);

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
+@RequestMapping("/api/users")
 public class UserController {
     @Autowired
     UserRepository userRepository;
@@ -18,28 +19,28 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @GetMapping("/users")
+    @GetMapping()
     public List<UserDto> getUsers() {
         return userService.findAllUser();
     }
 
-    @GetMapping("/users/{userId}")
+    @GetMapping("{userId}")
     public UserDto getUserById(@PathVariable("userId") Integer id) throws Exception {
         return userService.findUserById(id);
     }
 
-    @PostMapping("/users")
+    @PostMapping()
     public UserDto CreateUser(@RequestBody User user) {
         return userService.registerUser(user);
     }
 
-    @PatchMapping("/users/{userId}")
+    @PatchMapping("{userId}")
     public UserDto updateUser(@PathVariable("userId") Integer id, @RequestBody User user) throws Exception {
         return userService.updateUser(user, id);
     }
 
 
-    @DeleteMapping("/users/{userId}")
+    @DeleteMapping("{userId}")
     public String deleteUser(@PathVariable("userId") Integer id) throws Exception {
         Optional<User> user = userRepository.findById(id);
 
@@ -52,12 +53,12 @@ public class UserController {
         return "User delete successfully with id = " + id;
     }
 
-    @PutMapping("/users/{userId1}/follow/{userId2}")
+    @PutMapping("{userId1}/follow/{userId2}")
     public UserDto followUser(@PathVariable("userId1") Integer userId1, @PathVariable("userId2") Integer userId2) throws Exception {
         return userService.followUser(userId1, userId2);
     }
 
-    @GetMapping("/users/search")
+    @GetMapping("search")
     public List<UserDto> searchUser(@RequestParam("query") String query) {
         return userService.searchUser(query);
     }
