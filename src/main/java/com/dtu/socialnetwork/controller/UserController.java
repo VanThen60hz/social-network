@@ -29,10 +29,6 @@ public class UserController {
         return userService.findUserById(id);
     }
 
-    @PostMapping()
-    public UserDto CreateUser(@RequestBody User user) {
-        return userService.registerUser(user);
-    }
 
     @PatchMapping("{userId}")
     public UserDto updateUser(@PathVariable("userId") Integer id, @RequestBody User user) throws Exception {
