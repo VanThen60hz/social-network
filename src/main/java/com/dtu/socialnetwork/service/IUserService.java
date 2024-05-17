@@ -19,4 +19,6 @@ public interface IUserService {
     UserDto updateUser(User user, Integer userId) throws Exception;
 
     List<UserDto> searchUser(String query);
+
+    User findByJwt(String jwt);
 }

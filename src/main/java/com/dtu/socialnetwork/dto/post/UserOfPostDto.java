@@ -12,17 +12,15 @@ public class UserOfPostDto implements Serializable {
     private final String firstName;
     private final String lastName;
     private final String email;
-    private final String password;
     private final String gender;
     private final List<Integer> followers;
     private final List<Integer> followings;
 
-    public UserOfPostDto(Integer id, String firstName, String lastName, String email, String password, String gender, List<Integer> followers, List<Integer> followings) {
+    public UserOfPostDto(Integer id, String firstName, String lastName, String email, String gender, List<Integer> followers, List<Integer> followings) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.password = password;
         this.gender = gender;
         this.followers = followers;
         this.followings = followings;
@@ -44,9 +42,6 @@ public class UserOfPostDto implements Serializable {
         return email;
     }
 
-    public String getPassword() {
-        return password;
-    }
 
     public String getGender() {
         return gender;
@@ -69,7 +64,6 @@ public class UserOfPostDto implements Serializable {
                 Objects.equals(this.firstName, entity.firstName) &&
                 Objects.equals(this.lastName, entity.lastName) &&
                 Objects.equals(this.email, entity.email) &&
-                Objects.equals(this.password, entity.password) &&
                 Objects.equals(this.gender, entity.gender) &&
                 Objects.equals(this.followers, entity.followers) &&
                 Objects.equals(this.followings, entity.followings);
@@ -77,7 +71,7 @@ public class UserOfPostDto implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, password, gender, followers, followings);
+        return Objects.hash(id, firstName, lastName, email, gender, followers, followings);
     }
 
     @Override
@@ -87,7 +81,6 @@ public class UserOfPostDto implements Serializable {
                 "firstName = " + firstName + ", " +
                 "lastName = " + lastName + ", " +
                 "email = " + email + ", " +
-                "password = " + password + ", " +
                 "gender = " + gender + ", " +
                 "followers = " + followers + ", " +
                 "followings = " + followings + ")";

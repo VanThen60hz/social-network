@@ -1,5 +1,6 @@
 package com.dtu.socialnetwork.service.impl;
 
+import com.dtu.socialnetwork.config.JwtProvider;
 import com.dtu.socialnetwork.dto.user.UserDto;
 import com.dtu.socialnetwork.mapper.UserMapper;
 import com.dtu.socialnetwork.models.User;
@@ -54,22 +55,22 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDto followUser(Integer userId1, Integer userId2) throws Exception {
+    public UserDto followUser(Integer reqUserId, Integer userId2) throws Exception {
 
-        User user1 = userRepository.findById(userId1).orElse(null);
+        User reqUser = userRepository.findById(reqUserId).orElse(null);
         User user2 = userRepository.findById(userId2).orElse(null);
 
-        if (user1 == null || user2 == null) {
-            throw new Exception("User not exist with id = " + userId1 + " or " + userId2);
+        if (reqUser == null || user2 == null) {
+            throw new Exception("User not exist with id = " + reqUserId + " or " + userId2);
         }
 
-        user1.getFollowings().add(user2.getId());
-        user2.getFollowers().add(user1.getId());
+        reqUser.getFollowings().add(user2.getId());
+        user2.getFollowers().add(reqUser.getId());
 
-        userRepository.save(user1);
+        userRepository.save(reqUser);
         userRepository.save(user2);
 
-        return userMapper.toDto(user1);
+        return userMapper.toDto(reqUser);
     }
 
     @Override
@@ -98,11 +99,25 @@ public class UserService implements IUserService {
             oldUser.setPassword(user.getPassword());
         }
 
-        return userMapper.toDto(userRepository.save(oldUser));
+        if (user.getGender() != null) {
+            oldUser.setGender(user.getGender());
+        }
+
+        User saveUser = userRepository.save(oldUser);
+        saveUser.setPassword(null);
+        return userMapper.toDto(saveUser);
     }
 
     @Override
     public List<UserDto> searchUser(String query) {
         return userRepository.searchUser(query).stream().map(userMapper::toDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public User findByJwt(String jwt) {
+        String email = JwtProvider.getEmailFromToken(jwt);
+
+
+        return userRepository.findByEmail(email);
     }
 }

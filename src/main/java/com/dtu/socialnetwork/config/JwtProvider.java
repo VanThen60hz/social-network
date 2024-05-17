@@ -3,6 +3,7 @@ package com.dtu.socialnetwork.config;
 import javax.crypto.SecretKey;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.Authentication;
@@ -11,13 +12,14 @@ import java.time.Instant;
 import java.util.Date;
 
 public class JwtProvider {
-    private static SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
+    private static final SecretKey key = Keys.hmacShaKeyFor(JwtConstant.SECRET_KEY.getBytes());
 
     public static String generateToken(Authentication auth) {
         return Jwts.builder()
                 .setIssuer("social-network")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + 86400000))
+                .claim("email", auth.getName())
                 .signWith(key)
                 .compact();
     }
@@ -31,6 +33,6 @@ public class JwtProvider {
                 .parseClaimsJws(jwt)
                 .getBody();
 
-        return claims.getSubject();
+        return String.valueOf(claims.get("email"));
     }
 }

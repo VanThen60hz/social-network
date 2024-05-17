@@ -4,6 +4,7 @@ import com.dtu.socialnetwork.dto.post.CreatePostDto;
 import com.dtu.socialnetwork.dto.post.PostDto;
 import com.dtu.socialnetwork.response.ApiResponse;
 import com.dtu.socialnetwork.service.impl.PostService;
+import com.dtu.socialnetwork.service.impl.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,15 +19,23 @@ public class PostController {
     @Autowired
     PostService postService;
 
-    @PostMapping("user/{userId}")
-    public ResponseEntity<PostDto> createNewPost(@RequestBody CreatePostDto createPostDto, @PathVariable Integer userId) throws Exception {
-        PostDto newPost = postService.createNewPost(createPostDto, userId);
+    @Autowired
+    UserService userService;
+
+    @PostMapping()
+    public ResponseEntity<PostDto> createNewPost(
+            @RequestHeader("Authorization") String jwt,
+            @RequestBody CreatePostDto createPostDto
+    ) throws Exception {
+        PostDto newPost = postService.createNewPost(createPostDto, userService.findByJwt(jwt).getId());
         return new ResponseEntity<>(newPost, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("{postId}/user/{userId}")
-    public ResponseEntity<ApiResponse> deletePost(@PathVariable Integer postId, @PathVariable Integer userId) throws Exception {
-        String message = postService.deletePost(postId, userId);
+    @DeleteMapping("{postId}")
+    public ResponseEntity<ApiResponse> deletePost(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable Integer postId) throws Exception {
+        String message = postService.deletePost(postId, userService.findByJwt(jwt).getId());
 
         ApiResponse apiResponse = new ApiResponse(message, true);
 
@@ -51,15 +60,19 @@ public class PostController {
         return new ResponseEntity<>(posts, HttpStatus.OK);
     }
 
-    @PatchMapping("{postId}/user/{userId}")
-    public ResponseEntity<PostDto> savePost(@PathVariable Integer postId, @PathVariable Integer userId) throws Exception {
-        PostDto postDto = postService.savePost(postId, userId);
+    @PatchMapping("{postId}")
+    public ResponseEntity<PostDto> savePost(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable Integer postId) throws Exception {
+        PostDto postDto = postService.savePost(postId, userService.findByJwt(jwt).getId());
         return new ResponseEntity<>(postDto, HttpStatus.OK);
     }
 
-    @PostMapping("like/{postId}/user/{userId}")
-    public ResponseEntity<PostDto> likePost(@PathVariable Integer postId, @PathVariable Integer userId) throws Exception {
-        PostDto postDto = postService.likePost(postId, userId);
+    @PostMapping("like/{postId}")
+    public ResponseEntity<PostDto> likePost(
+            @RequestHeader("Authorization") String jwt,
+            @PathVariable Integer postId) throws Exception {
+        PostDto postDto = postService.likePost(postId, userService.findByJwt(jwt).getId());
         return new ResponseEntity<>(postDto, HttpStatus.OK);
     }
 }

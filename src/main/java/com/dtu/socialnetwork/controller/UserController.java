@@ -30,8 +30,12 @@ public class UserController {
     }
 
 
-    @PatchMapping("{userId}")
-    public UserDto updateUser(@PathVariable("userId") Integer id, @RequestBody User user) throws Exception {
+    @PatchMapping()
+    public UserDto updateUser(@RequestHeader("Authorization") String jwt, @RequestBody User user) throws Exception {
+
+        Integer id = userService.findByJwt(jwt).getId();
+
+
         return userService.updateUser(user, id);
     }
 
@@ -49,13 +53,25 @@ public class UserController {
         return "User delete successfully with id = " + id;
     }
 
-    @PutMapping("{userId1}/follow/{userId2}")
-    public UserDto followUser(@PathVariable("userId1") Integer userId1, @PathVariable("userId2") Integer userId2) throws Exception {
-        return userService.followUser(userId1, userId2);
+    @PutMapping("follow/{userId2}")
+    public UserDto followUser(@RequestHeader("Authorization") String jwt, @PathVariable("userId2") Integer userId2) throws Exception {
+        Integer reqUserId = userService.findByJwt(jwt).getId();
+
+        return userService.followUser(reqUserId, userId2);
     }
 
     @GetMapping("search")
     public List<UserDto> searchUser(@RequestParam("query") String query) {
         return userService.searchUser(query);
+    }
+
+    @GetMapping("profile")
+    public User getUserFromToken(@RequestHeader("Authorization") String jwt) {
+
+
+        User user = userService.findByJwt(jwt);
+        user.setPassword(null);
+
+        return user;
     }
 }

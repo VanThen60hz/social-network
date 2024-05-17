@@ -27,6 +27,7 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
+    
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
