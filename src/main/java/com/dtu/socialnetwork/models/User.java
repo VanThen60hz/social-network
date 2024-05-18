@@ -50,7 +50,7 @@ public class User {
     @Column(name = "following_id")
     private List<Integer> followings = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "save_posts",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "posts_id"))

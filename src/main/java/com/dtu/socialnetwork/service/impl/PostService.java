@@ -1,14 +1,13 @@
 package com.dtu.socialnetwork.service.impl;
 
-import com.dtu.socialnetwork.dto.post.CreatePostDto;
 import com.dtu.socialnetwork.dto.post.PostDto;
-import com.dtu.socialnetwork.mapper.CreatePostMapper;
 import com.dtu.socialnetwork.mapper.PostMapper;
 import com.dtu.socialnetwork.models.Post;
 import com.dtu.socialnetwork.models.User;
 import com.dtu.socialnetwork.repository.PostRepository;
 import com.dtu.socialnetwork.repository.UserRepository;
 import com.dtu.socialnetwork.service.IPostService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -19,25 +18,23 @@ import java.util.stream.Collectors;
 
 @Service
 public class PostService implements IPostService {
-    private final PostRepository postRepository;
-    private final UserRepository userRepository;
-    private final UserService userService;
-    private final PostMapper postMapper;
-    private final CreatePostMapper createPostMapper;
 
-    public PostService(PostRepository postRepository, UserRepository userRepository, UserService userService, PostMapper postMapper,
-                       CreatePostMapper createPostMapper) {
-        this.postRepository = postRepository;
-        this.userRepository = userRepository;
-        this.userService = userService;
-        this.postMapper = postMapper;
-        this.createPostMapper = createPostMapper;
-    }
+    @Autowired
+    private PostRepository postRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private PostMapper postMapper;
 
 
     @Override
-    public PostDto createNewPost(CreatePostDto createPostDto, Integer userId) throws Exception {
-        Post post = createPostMapper.toEntity(createPostDto);
+    public PostDto createNewPost(PostDto postDto, Integer userId) throws Exception {
+        Post post = postMapper.toEntity(postDto);
 
         Optional<User> user = userRepository.findById(userId);
         post.setUser(user.get());

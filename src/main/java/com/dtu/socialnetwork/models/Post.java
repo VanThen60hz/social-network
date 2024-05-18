@@ -23,25 +23,27 @@ public class Post {
     @Column(name = "video")
     private String video;
 
-    @ManyToOne(fetch = FetchType.LAZY) // Thêm FetchType và thay đổi tên cột foreign key
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
-    
+
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "post_likes",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> likedByUsers = new ArrayList<>();
 
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
     public Post() {
-        // Default constructor required by JPA
     }
 
-    public Post(Integer id, String caption, String image, String video, User user, LocalDateTime createdAt, List<User> likedByUsers) {
+    public Post(Integer id, String caption, String image, String video, User user, LocalDateTime createdAt, List<User> likedByUsers, List<Comment> comments) {
         this.id = id;
         this.caption = caption;
         this.image = image;
@@ -49,9 +51,8 @@ public class Post {
         this.user = user;
         this.createdAt = createdAt;
         this.likedByUsers = likedByUsers;
+        this.comments = comments;
     }
-
-    // Getters và setters
 
     public Integer getId() {
         return id;
@@ -85,14 +86,6 @@ public class Post {
         this.video = video;
     }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
     public User getUser() {
         return user;
     }
@@ -101,11 +94,28 @@ public class Post {
         this.user = user;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public List<User> getLikedByUsers() {
         return likedByUsers;
     }
 
     public void setLikedByUsers(List<User> likedByUsers) {
         this.likedByUsers = likedByUsers;
+    }
+
+
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 }

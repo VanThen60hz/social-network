@@ -14,18 +14,16 @@ public class UserDto implements Serializable {
     private final String firstName;
     private final String lastName;
     private final String email;
-    private final String password;
     private final String gender;
     private final List<Integer> followers;
     private final List<Integer> followings;
     private final Set<PostDto> savePosts;
 
-    public UserDto(Integer id, String firstName, String lastName, String email, String password, String gender, List<Integer> followers, List<Integer> followings, Set<PostDto> savePosts) {
+    public UserDto(Integer id, String firstName, String lastName, String email, String gender, List<Integer> followers, List<Integer> followings, Set<PostDto> savePosts) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.password = password;
         this.gender = gender;
         this.followers = followers;
         this.followings = followings;
@@ -46,10 +44,6 @@ public class UserDto implements Serializable {
 
     public String getEmail() {
         return email;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public String getGender() {
@@ -77,7 +71,6 @@ public class UserDto implements Serializable {
                 Objects.equals(this.firstName, entity.firstName) &&
                 Objects.equals(this.lastName, entity.lastName) &&
                 Objects.equals(this.email, entity.email) &&
-                Objects.equals(this.password, entity.password) &&
                 Objects.equals(this.gender, entity.gender) &&
                 Objects.equals(this.followers, entity.followers) &&
                 Objects.equals(this.followings, entity.followings) &&
@@ -86,7 +79,7 @@ public class UserDto implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, password, gender, followers, followings, savePosts);
+        return Objects.hash(id, firstName, lastName, email, gender, followers, followings, savePosts);
     }
 
     @Override
@@ -96,7 +89,6 @@ public class UserDto implements Serializable {
                 "firstName = " + firstName + ", " +
                 "lastName = " + lastName + ", " +
                 "email = " + email + ", " +
-                "password = " + password + ", " +
                 "gender = " + gender + ", " +
                 "followers = " + followers + ", " +
                 "followings = " + followings + ", " +

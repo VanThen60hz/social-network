@@ -1,6 +1,5 @@
 package com.dtu.socialnetwork.controller;
 
-import com.dtu.socialnetwork.dto.post.CreatePostDto;
 import com.dtu.socialnetwork.dto.post.PostDto;
 import com.dtu.socialnetwork.response.ApiResponse;
 import com.dtu.socialnetwork.service.impl.PostService;
@@ -25,9 +24,9 @@ public class PostController {
     @PostMapping()
     public ResponseEntity<PostDto> createNewPost(
             @RequestHeader("Authorization") String jwt,
-            @RequestBody CreatePostDto createPostDto
+            @RequestBody PostDto postDto
     ) throws Exception {
-        PostDto newPost = postService.createNewPost(createPostDto, userService.findByJwt(jwt).getId());
+        PostDto newPost = postService.createNewPost(postDto, userService.findByJwt(jwt).getId());
         return new ResponseEntity<>(newPost, HttpStatus.CREATED);
     }
 

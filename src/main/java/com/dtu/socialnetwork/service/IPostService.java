@@ -1,12 +1,11 @@
 package com.dtu.socialnetwork.service;
 
-import com.dtu.socialnetwork.dto.post.CreatePostDto;
 import com.dtu.socialnetwork.dto.post.PostDto;
 
 import java.util.List;
 
 public interface IPostService {
-    PostDto createNewPost(CreatePostDto createPostDto, Integer userId) throws Exception;
+    PostDto createNewPost(PostDto postDto, Integer userId) throws Exception;
 
     List<PostDto> findAllPost();
 
