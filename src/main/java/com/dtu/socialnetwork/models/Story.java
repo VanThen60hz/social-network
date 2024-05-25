@@ -6,26 +6,31 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "reels")
-public class Reel {
+@Entity
+@Table(name = "stories")
+public class Story {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
     private Integer id;
-
-    @Column(name = "title")
-    private String title;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @Column(name = "video")
-    private String video;
+    @Column(name = "image")
+    private String image;
 
+    @Column(name = "caption")
+    private String caption;
+
+    @Column(name = "timestamp")
+    private LocalDateTime timestamp;
 
 }
