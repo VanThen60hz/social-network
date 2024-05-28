@@ -2,6 +2,7 @@ package com.dtu.socialnetwork.service.impl;
 
 import com.dtu.socialnetwork.config.JwtProvider;
 import com.dtu.socialnetwork.dto.user.UserDto;
+import com.dtu.socialnetwork.exception.UserException;
 import com.dtu.socialnetwork.mapper.UserMapper;
 import com.dtu.socialnetwork.models.User;
 import com.dtu.socialnetwork.repository.UserRepository;
@@ -39,14 +40,14 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDto findUserById(Integer userId) throws Exception {
+    public UserDto findUserById(Integer userId) throws UserException {
         Optional<User> user = userRepository.findById(userId);
 
         if (user.isPresent()) {
             return userMapper.toDto(user.get());
         }
 
-        throw new Exception("User not exist with id = " + userId);
+        throw new UserException("User not exist with id = " + userId);
     }
 
     @Override
@@ -55,13 +56,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDto followUser(Integer reqUserId, Integer userId2) throws Exception {
+    public UserDto followUser(Integer reqUserId, Integer userId2) throws UserException {
 
         User reqUser = userRepository.findById(reqUserId).orElse(null);
         User user2 = userRepository.findById(userId2).orElse(null);
 
         if (reqUser == null || user2 == null) {
-            throw new Exception("User not exist with id = " + reqUserId + " or " + userId2);
+            throw new UserException("User not exist with id = " + reqUserId + " or " + userId2);
         }
 
         reqUser.getFollowings().add(user2.getId());
@@ -74,11 +75,11 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDto updateUser(User user, Integer userId) throws Exception {
+    public UserDto updateUser(User user, Integer userId) throws UserException {
         Optional<User> userFind = userRepository.findById(userId);
 
         if (userFind.isEmpty()) {
-            throw new Exception("User not exist with id = " + userId);
+            throw new UserException("User not exist with id = " + userId);
         }
 
         User oldUser = userFind.get();
