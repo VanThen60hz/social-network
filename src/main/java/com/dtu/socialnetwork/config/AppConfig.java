@@ -29,6 +29,7 @@ public class AppConfig {
                                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(Authorize ->
                         Authorize
+                                .requestMatchers("/api", "/api/home").permitAll()
                                 .requestMatchers("/api/**").authenticated()
                                 .anyRequest().permitAll())
                 .addFilterBefore(new jwtValidator(), BasicAuthenticationFilter.class)
@@ -42,7 +43,12 @@ public class AppConfig {
             @Override
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration cfg = new CorsConfiguration();
-                cfg.setAllowedOrigins(java.util.List.of("http://localhost:3000"));
+                cfg.setAllowedOrigins(java.util.List.of(
+                        "http://localhost:5173",
+                        "https://www.vanthen.click/",
+                        "https://social-network-client-nine.vercel.app",
+                        "https://social-network-client-vanthen60hzs-projects.vercel.app/"
+                ));
                 cfg.setAllowedMethods(Collections.singletonList("*"));
                 cfg.setAllowCredentials(true);
                 cfg.setAllowedHeaders(Collections.singletonList("*"));
