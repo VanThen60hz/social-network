@@ -8,6 +8,13 @@ import org.mapstruct.*;
 public interface ChatMapper {
     Chat toEntity(ChatDto chatDto);
 
+    @AfterMapping
+    default void linkMessages(@MappingTarget Chat chat) {
+        if (chat.getMessages() != null) {
+            chat.getMessages().forEach(message -> message.setChat(chat));
+        }
+    }
+
     ChatDto toDto(Chat chat);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

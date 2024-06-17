@@ -23,13 +23,14 @@ public class ChatService implements IChatService {
 
 
     @Override
-    public ChatDto createChat(User reqUser, User user2) {
+    public ChatDto createOneToOneChat(User reqUser, User user2) {
         Chat isChatExist = chatRepository.findChatByUsersId(user2, reqUser);
 
         if (isChatExist != null) {
             return chatMapper.toDto(isChatExist);
         }
         Chat chat = new Chat();
+        chat.setChatName("OneToOne" + reqUser.getFirstName() + " " + reqUser.getLastName() + "&" + user2.getFirstName() + " " + user2.getLastName());
         chat.getChatUser().add(user2);
         chat.getChatUser().add(reqUser);
         chat.setTimestamp(LocalDateTime.now());

@@ -27,7 +27,7 @@ public class CommentController {
         return ResponseEntity.ok(commentService.CreateComment(commentDto, postId, userId));
     }
 
-    @PatchMapping("like/{commentId}")
+    @PutMapping("like/{commentId}")
     public ResponseEntity<CommentDto> likeComment(@PathVariable("commentId") Integer commentId,
                                                   @RequestHeader("Authorization") String jwt) throws Exception {
         Integer userId = userService.findByJwt(jwt).getId();

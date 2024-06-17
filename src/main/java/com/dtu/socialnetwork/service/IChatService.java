@@ -6,7 +6,7 @@ import com.dtu.socialnetwork.models.User;
 import java.util.List;
 
 public interface IChatService {
-    public ChatDto createChat(User reqUser, User user2);
+    public ChatDto createOneToOneChat(User reqUser, User user2);
 
     public ChatDto findChatById(Integer chatId);
 

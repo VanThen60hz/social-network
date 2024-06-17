@@ -18,7 +18,7 @@ public class JwtProvider {
         return Jwts.builder()
                 .setIssuer("social-network")
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + 86400000))
+                .setExpiration(new Date(new Date().getTime() + 604800000))
                 .claim("email", auth.getName())
                 .signWith(key)
                 .compact();

@@ -10,7 +10,9 @@ public interface PostMapper {
 
     @AfterMapping
     default void linkComments(@MappingTarget Post post) {
-        post.getComments().forEach(comment -> comment.setPost(post));
+        if (post.getComments() != null) {
+            post.getComments().forEach(comment -> comment.setPost(post));
+        }
     }
 
     PostDto toDto(Post post);

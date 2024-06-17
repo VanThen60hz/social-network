@@ -7,6 +7,7 @@ import lombok.Value;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -21,6 +22,7 @@ public class ChatDto implements Serializable {
     String chatImage;
     Set<UserDto> chatUser;
     LocalDateTime timestamp;
+    List<MessageDto> messages;
 
     /**
      * DTO for {@link com.dtu.socialnetwork.models.User}
@@ -33,6 +35,18 @@ public class ChatDto implements Serializable {
         String firstName;
         String lastName;
         String email;
-        String gender;
+    }
+
+    /**
+     * DTO for {@link com.dtu.socialnetwork.models.Message}
+     */
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class MessageDto implements Serializable {
+        Integer id;
+        String content;
+        String image;
+        LocalDateTime timestamp;
     }
 }

@@ -25,12 +25,12 @@ public class ChatController {
     private UserRepository userRepository;
 
     @PostMapping
-    public ResponseEntity<ChatDto> createChat(
+    public ResponseEntity<ChatDto> creatOneToOneChat(
             @RequestHeader("Authorization") String jwt,
             @RequestBody CreateChatRequest req) throws Exception {
         User reqUser = userService.findByJwt(jwt);
         User user2 = userRepository.findById(req.getUserId()).orElseThrow(() -> new Exception("User not found"));
-        return ResponseEntity.ok(chatService.createChat(reqUser, user2));
+        return ResponseEntity.ok(chatService.createOneToOneChat(reqUser, user2));
     }
 
     @GetMapping()
